@@ -627,15 +627,44 @@ $btnAutoMode.Add_Click({
 })
 
 # Boutons Refresh pour chaque carte
-for ($i = 0; $i -lt 6; $i++) {
-     $index = $i
-     $btnRefreshes[$index].Add_Click({
-     $logBoxes[$index].Clear()
-     $logBoxes[$index].AppendText("[REFRESH] Affichage vidé`n")
-     # Le stream continue normalement en arrière-plan
-     # On ne redémarre rien, on ne coupe rien
-    })  
-}
+$btnRefreshes[$index].Add_Click({
+    Write-DebugLog "REFRESH cliqué sur carte $index - début"
+    
+    $logBoxes[$index].Clear()
+    $logBoxes[$index].AppendText("[REFRESH] Rechargement...`n")
+    Write-DebugLog "Carte $index vidée"
+    
+    # Chemins des logs
+    $paths = @(
+        "/root/.pm2/logs/meetgay-out.log",
+        "/root/.pm2/logs/control-out.log",
+        "/var/log/nginx/access.log",
+        "/var/log/postgresql/postgresql.log",
+        "/var/log/php8.3-fpm.log",
+        "/root/.pm2/logs/node-out.log"
+    )
+    
+    $path = $paths[$index]
+    Write-DebugLog "Carte $index - chemin: $path"
+    
+    Write-DebugLog "Carte $index - exécution SSH tail -n 30 $path"
+    
+    $result = ssh root@$VPS_IP "tail -n 30 $path 2>&1"
+    $sshExitCode = $LASTEXITCODE
+    
+    Write-DebugLog "Carte $index - SSH terminé, code sortie: $sshExitCode"
+    Write-DebugLog "Carte $index - résultat (premiers caractères): $($result.Substring(0, [Math]::Min(100, $result.Length)))"
+    
+    if ($result -and $result.Trim() -ne "") {
+        $logBoxes[$index].AppendText($result)
+        Write-DebugLog "Carte $index - $($result.Split("`n").Count) lignes affichées"
+    } else {
+        $logBoxes[$index].AppendText("[REFRESH] Aucune ligne trouvée ou fichier inexistant`n")
+        Write-DebugLog "Carte $index - AUCUN résultat SSH"
+    }
+    
+    Write-DebugLog "REFRESH carte $index - fin"
+})
 
 # Boutons Clear pour chaque carte
 for ($i = 0; $i -lt 6; $i++) {
