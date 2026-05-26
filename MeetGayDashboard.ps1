@@ -628,11 +628,14 @@ $btnAutoMode.Add_Click({
 
 # Boutons Refresh pour chaque carte
 $btnRefreshes[$index].Add_Click({
-    Write-DebugLog "REFRESH cliqué sur carte $index - début"
+    # Log direct
+    $logFile = "C:\Users\Teri\Desktop\log\dashboard_debug.log"
+    $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+    Add-Content -Path $logFile -Value "$timestamp [REFRESH] Cliqué sur carte $index"
     
     $logBoxes[$index].Clear()
     $logBoxes[$index].AppendText("[REFRESH] Rechargement...`n")
-    Write-DebugLog "Carte $index vidée"
+    Add-Content -Path $logFile -Value "$timestamp [REFRESH] Carte $index vidée"
     
     # Chemins des logs
     $paths = @(
@@ -645,25 +648,23 @@ $btnRefreshes[$index].Add_Click({
     )
     
     $path = $paths[$index]
-    Write-DebugLog "Carte $index - chemin: $path"
+    Add-Content -Path $logFile -Value "$timestamp [REFRESH] Carte $index - chemin: $path"
     
-    Write-DebugLog "Carte $index - exécution SSH tail -n 30 $path"
+    # Exécuter SSH et capturer la sortie
+    Add-Content -Path $logFile -Value "$timestamp [REFRESH] Exécution SSH..."
     
     $result = ssh root@$VPS_IP "tail -n 30 $path 2>&1"
-    $sshExitCode = $LASTEXITCODE
-    
-    Write-DebugLog "Carte $index - SSH terminé, code sortie: $sshExitCode"
-    Write-DebugLog "Carte $index - résultat (premiers caractères): $($result.Substring(0, [Math]::Min(100, $result.Length)))"
+    Add-Content -Path $logFile -Value "$timestamp [REFRESH] SSH terminé, résultat: $($result.Substring(0, [Math]::Min(200, $result.Length)))"
     
     if ($result -and $result.Trim() -ne "") {
         $logBoxes[$index].AppendText($result)
-        Write-DebugLog "Carte $index - $($result.Split("`n").Count) lignes affichées"
+        Add-Content -Path $logFile -Value "$timestamp [REFRESH] Lignes affichées avec succès"
     } else {
-        $logBoxes[$index].AppendText("[REFRESH] Aucune ligne trouvée ou fichier inexistant`n")
-        Write-DebugLog "Carte $index - AUCUN résultat SSH"
+        $logBoxes[$index].AppendText("[REFRESH] Aucune ligne trouvée`n")
+        Add-Content -Path $logFile -Value "$timestamp [REFRESH] AUCUN résultat"
     }
     
-    Write-DebugLog "REFRESH carte $index - fin"
+    Add-Content -Path $logFile -Value "$timestamp [REFRESH] Fin"
 })
 
 # Boutons Clear pour chaque carte
