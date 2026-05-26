@@ -64,12 +64,12 @@ $WarningPreference = "Continue"
 # Rediriger les erreurs non gérées
 $null = [System.AppDomain]::CurrentDomain.Add_UnhandledException({
     param($sender, $e)
-        Write-Error -Exception $e.ExceptionObject -Source "UNHANDLED_EXCEPTION"
+    Write-Error -Exception $e.ExceptionObject -Source "UNHANDLED_EXCEPTION"
 })
 
 # Capturer les erreurs de type ThrowTerminatingError
 trap {
-    Write-Error -Exception $_ -Source "TRAP"
+    Write-PowerShellError -Exception $_ -Source "TRAP"
     continue
 }
 
