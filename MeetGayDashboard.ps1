@@ -628,43 +628,12 @@ $btnAutoMode.Add_Click({
 
 # Boutons Refresh pour chaque carte
 $btnRefreshes[$index].Add_Click({
-    # Log direct
-    $logFile = "C:\Users\Teri\Desktop\log\dashboard_debug.log"
-    $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-    Add-Content -Path $logFile -Value "$timestamp [REFRESH] Cliqué sur carte $index"
+    # DEBUG FORCE - HELLO WORLD
+    $debugFile = "C:\Users\Teri\Desktop\log\dashboard_debug.log"
+    [System.IO.File]::WriteAllText($debugFile, "HELLO WORLD - " + (Get-Date -Format "yyyy-MM-dd HH:mm:ss") + " - Carte $index`r`n")
     
     $logBoxes[$index].Clear()
-    $logBoxes[$index].AppendText("[REFRESH] Rechargement...`n")
-    Add-Content -Path $logFile -Value "$timestamp [REFRESH] Carte $index vidée"
-    
-    # Chemins des logs
-    $paths = @(
-        "/root/.pm2/logs/meetgay-out.log",
-        "/root/.pm2/logs/control-out.log",
-        "/var/log/nginx/access.log",
-        "/var/log/postgresql/postgresql.log",
-        "/var/log/php8.3-fpm.log",
-        "/root/.pm2/logs/node-out.log"
-    )
-    
-    $path = $paths[$index]
-    Add-Content -Path $logFile -Value "$timestamp [REFRESH] Carte $index - chemin: $path"
-    
-    # Exécuter SSH et capturer la sortie
-    Add-Content -Path $logFile -Value "$timestamp [REFRESH] Exécution SSH..."
-    
-    $result = ssh root@$VPS_IP "tail -n 30 $path 2>&1"
-    Add-Content -Path $logFile -Value "$timestamp [REFRESH] SSH terminé, résultat: $($result.Substring(0, [Math]::Min(200, $result.Length)))"
-    
-    if ($result -and $result.Trim() -ne "") {
-        $logBoxes[$index].AppendText($result)
-        Add-Content -Path $logFile -Value "$timestamp [REFRESH] Lignes affichées avec succès"
-    } else {
-        $logBoxes[$index].AppendText("[REFRESH] Aucune ligne trouvée`n")
-        Add-Content -Path $logFile -Value "$timestamp [REFRESH] AUCUN résultat"
-    }
-    
-    Add-Content -Path $logFile -Value "$timestamp [REFRESH] Fin"
+    $logBoxes[$index].AppendText("[REFRESH] Affichage vidé`n")
 })
 
 # Boutons Clear pour chaque carte
