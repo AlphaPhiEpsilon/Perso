@@ -41,10 +41,6 @@ Write-DebugLog "=== DASHBOARD DÉMARRÉ ==="
 # Fichier de log des erreurs PowerShell
 $POWERSHELL_ERROR_LOG = "C:\Users\Teri\Desktop\log\powershell_errors.log"
 
-# Créer le dossier s'il n'existe pas
-$logDir = Split-Path $POWERSHELL_ERROR_LOG -Parent
-if (!(Test-Path $logDir)) { New-Item -ItemType Directory -Path $logDir -Force }
-
 function Write-PowerShellError {
     param($Exception, $Source = "UNKNOWN")
     $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
@@ -56,6 +52,12 @@ function Write-PowerShellError {
     Add-Content -Path $POWERSHELL_ERROR_LOG -Value $errorMessage
     # Plus de Write-Host = plus de popups
 }
+
+
+# Créer le dossier s'il n'existe pas
+$logDir = Split-Path $POWERSHELL_ERROR_LOG -Parent
+if (!(Test-Path $logDir)) { New-Item -ItemType Directory -Path $logDir -Force }
+
 
 # Capturer TOUTES les erreurs (celles qui apparaissent en popup)
 $ErrorActionPreference = "Stop"
