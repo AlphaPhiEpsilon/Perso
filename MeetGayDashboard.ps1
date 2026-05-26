@@ -24,13 +24,8 @@ $logDir = Split-Path $DEBUG_LOG -Parent
 if (!(Test-Path $logDir)) { New-Item -ItemType Directory -Path $logDir -Force }
 
 # Fonction d'écriture de log
-function Write-DebugLog {
-    param($Message, $Level = "INFO")
-    $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
-    $logEntry = "$timestamp [$Level] $Message"
-    Add-Content -Path $DEBUG_LOG -Value $logEntry
-    Write-Host $logEntry
-}
+
+
 
 Write-DebugLog "=== DASHBOARD DÉMARRÉ ==="
 
@@ -40,6 +35,14 @@ Write-DebugLog "=== DASHBOARD DÉMARRÉ ==="
 
 # Fichier de log des erreurs PowerShell
 $POWERSHELL_ERROR_LOG = "C:\Users\Teri\Desktop\log\powershell_errors.log"
+
+function Write-DebugLog {
+    param($Message, $Level = "INFO")
+    $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+    $logEntry = "$timestamp [$Level] $Message"
+    Add-Content -Path $DEBUG_LOG -Value $logEntry
+    Write-Host $logEntry
+    }
 
 function Write-PowerShellError {
     param($Exception, $Source = "UNKNOWN")
@@ -51,6 +54,12 @@ function Write-PowerShellError {
     # Écrire uniquement dans le log existant
     Add-Content -Path $POWERSHELL_ERROR_LOG -Value $errorMessage
     # Plus de Write-Host = plus de popups
+}
+
+# Capturer les erreurs de type ThrowTerminatingError
+trap {
+    Write-PowerShellError -Exception $_ -Source "TRAP"
+    continue
 }
 
 
@@ -69,11 +78,7 @@ $null = [System.AppDomain]::CurrentDomain.Add_UnhandledException({
     Write-Error -Exception $e.ExceptionObject -Source "UNHANDLED_EXCEPTION"
 })
 
-# Capturer les erreurs de type ThrowTerminatingError
-trap {
-    Write-PowerShellError -Exception $_ -Source "TRAP"
-    continue
-}
+
 
 # Démarrer un job en arrière-plan pour surveiller les erreurs de la console
 $errorMonitorScript = {
