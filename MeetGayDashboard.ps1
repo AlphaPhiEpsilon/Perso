@@ -1,24 +1,6 @@
 #Projet en cours
-$ConfirmPreference = 'None'# TUER TOUS LES POPUPS RESTANTS
-$WarningPreference = "SilentlyContinue"
-$InformationPreference = "SilentlyContinue"
-$VerbosePreference = "SilentlyContinue"
-$DebugPreference = "SilentlyContinue"
-$ProgressPreference = "SilentlyContinue"
 
-$ErrorActionPreference = "Continue"
-$WarningPreference = "SilentlyContinue"
 [System.Windows.Forms.Application]::EnableVisualStyles()
-
-# Fonction SSH silencieuse
-function Invoke-SilentSSH {
-    param($Command)
-    ssh -q -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@$VPS_IP $Command 2>&1 | Out-Null
-    # Retourne le code de sortie uniquement
-    return $LASTEXITCODE
-}
-
-
 
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
@@ -82,12 +64,12 @@ $WarningPreference = "Continue"
 # Rediriger les erreurs non gérées
 $null = [System.AppDomain]::CurrentDomain.Add_UnhandledException({
     param($sender, $e)
-    Write-PowerShellError -Exception $e.ExceptionObject -Source "UNHANDLED_EXCEPTION"
+        Write-Error -Exception $e.ExceptionObject -Source "UNHANDLED_EXCEPTION"
 })
 
 # Capturer les erreurs de type ThrowTerminatingError
 trap {
-    Write-PowerShellError -Exception $_ -Source "TRAP"
+    Write-Error -Exception $_ -Source "TRAP"
     continue
 }
 
