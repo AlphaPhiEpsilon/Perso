@@ -1,3 +1,6 @@
+[System.Windows.Forms.MessageBox]::Show = { return "OK" }
+$ErrorActionPreference = "SilentlyContinue"
+
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
