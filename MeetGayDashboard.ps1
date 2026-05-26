@@ -1,5 +1,4 @@
 # TUER TOUS LES POPUPS RESTANTS
-# TUER TOUS LES POPUPS RESTANTS (version corrigée)
 $WarningPreference = "SilentlyContinue"
 $InformationPreference = "SilentlyContinue"
 $VerbosePreference = "SilentlyContinue"
