@@ -628,14 +628,13 @@ $btnAutoMode.Add_Click({
 
 # Boutons Refresh pour chaque carte
 for ($i = 0; $i -lt 6; $i++) {
-    $index = $i
-    $btnRefreshes[$index].Add_Click({
-        $logBoxes[$index].Clear()
-        $logBoxes[$index].AppendText("[REFRESH] Redémarrage du stream...`n")
-        if (-not $script:streamActive) {
-            Start-GlobalStream
-        }
-    })
+     $index = $i
+     $btnRefreshes[$index].Add_Click({
+     $logBoxes[$index].Clear()
+     $logBoxes[$index].AppendText("[REFRESH] Affichage vidé`n")
+     # Le stream continue normalement en arrière-plan
+     # On ne redémarre rien, on ne coupe rien
+    })  
 }
 
 # Boutons Clear pour chaque carte
