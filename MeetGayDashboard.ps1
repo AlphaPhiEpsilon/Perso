@@ -9,6 +9,17 @@ $ErrorActionPreference = "Continue"
 $WarningPreference = "SilentlyContinue"
 [System.Windows.Forms.Application]::EnableVisualStyles()
 
+# Fonction SSH silencieuse
+function Invoke-SilentSSH {
+    param($Command)
+    ssh -q -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@$VPS_IP $Command 2>&1 | Out-Null
+    # Retourne le code de sortie uniquement
+    return $LASTEXITCODE
+}
+
+Add-Type -AssemblyName System.Windows.Forms
+Add-Type -AssemblyName System.Drawing
+
 # ==============================================
 # DÉMARRAGE DE L'ENREGISTREMENT DE TOUTE LA SESSION
 # ==============================================
@@ -494,7 +505,7 @@ function Start-GlobalStream {
     $script:streamActive = $true
     $script:streamJob = Start-Job -ScriptBlock {
         param($ip)
-        ssh root@$ip "/root/stream-logs.sh" 2>&1
+        ssh -q -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=no root@$ip "/root/stream-logs.sh" 2>&1
     } -ArgumentList $VPS_IP
     
     $script:streamTimer = New-Object System.Windows.Forms.Timer
@@ -657,12 +668,12 @@ for ($i = 0; $i -lt 6; $i++) {
             if ($serviceInfo.pm2) {
                 Start-Job -ScriptBlock {
                     param($ip, $service, $action)
-                    ssh root@$ip "pm2 $action $service 2>&1"
+                    ssh -q -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=no root@$ip "pm2 $action $service" 2>&1 | Out-Null
                 } -ArgumentList $VPS_IP, $serviceInfo.service, $action | Out-Null
             } else {
                 Start-Job -ScriptBlock {
                     param($ip, $service, $action)
-                    ssh root@$ip "systemctl $action $service 2>&1"
+                    ssh -q -o BatchMode=yes -o ConnectTimeout=5 -o StrictHostKeyChecking=no root@$ip "systemctl $action $service" 2>&1 | Out-Null
                 } -ArgumentList $VPS_IP, $serviceInfo.service, $action | Out-Null
             }
         })
