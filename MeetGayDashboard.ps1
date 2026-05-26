@@ -1,4 +1,5 @@
-# TUER TOUS LES POPUPS RESTANTS
+#Projet en cours
+$ConfirmPreference = 'None'# TUER TOUS LES POPUPS RESTANTS
 $WarningPreference = "SilentlyContinue"
 $InformationPreference = "SilentlyContinue"
 $VerbosePreference = "SilentlyContinue"
@@ -17,16 +18,7 @@ function Invoke-SilentSSH {
     return $LASTEXITCODE
 }
 
-# Vérifier si une transcription GPO est active
-$gpoTranscript = Get-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\Transcription" -Name "EnableTranscripting" -ErrorAction SilentlyContinue
 
-if ($gpoTranscript.EnableTranscripting -eq 1) {
-    # La GPO force la transcription, on ne fait rien (elle tourne déjà)
-    Write-DebugLog "Transcription GPO détectée - utilisation de la transcription système" "INFO"
-} else {
-    # Pas de GPO, on lance notre propre transcription
-    Start-Transcript -Path $TranscriptLog -Append -ErrorAction SilentlyContinue
-}
 
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
@@ -771,10 +763,7 @@ $form.Add_FormClosing({
     [System.Environment]::Exit(0)
 })
 
-# Arrêter la transcription UNIQUEMENT si c'est nous qui l'avons démarrée
-if ($gpoTranscript.EnableTranscripting -ne 1) {
-    Stop-Transcript -ErrorAction SilentlyContinue
-}
+
 
 # Démarrage AUTO
 UpdateAutoModeButton
