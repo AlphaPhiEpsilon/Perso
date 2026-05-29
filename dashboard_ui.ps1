@@ -309,6 +309,28 @@ $txtIP.Location = New-Object System.Drawing.Point(180, 50)
 $txtIP.Size = New-Object System.Drawing.Size(250, 25)
 $configGroup.Controls.Add($txtIP)
 
+# Bouton Sauvegarder IP
+$btnSaveIP = New-Object System.Windows.Forms.Button
+$btnSaveIP.Text = "Sauvegarder IP"
+$btnSaveIP.Location = New-Object System.Drawing.Point(440, 50)
+$btnSaveIP.Size = New-Object System.Drawing.Size(120, 25)
+$btnSaveIP.BackColor = "#2a2a3e"
+$btnSaveIP.ForeColor = "#ffffff"
+$btnSaveIP.FlatStyle = "Flat"
+$configGroup.Controls.Add($btnSaveIP)
+
+$btnSaveIP.Add_Click({
+    $nouvelleIP = $txtIP.Text
+    $configFile = Join-Path $PSScriptRoot "dashboard_config.ps1"
+    $contenu = Get-Content $configFile -Raw
+    $ancienneLigne = "`$global:VPS_IP = `"$global:VPS_IP`""
+    $nouvelleLigne = "`$global:VPS_IP = `"$nouvelleIP`""
+    $nouveauContenu = $contenu.Replace($ancienneLigne, $nouvelleLigne)
+    $nouveauContenu | Set-Content $configFile -Encoding UTF8
+    $global:VPS_IP = $nouvelleIP
+    $cmdBox.AppendText("[CONFIG] IP sauvegardée : $nouvelleIP`n")
+})
+
 # Champ clé SSH
 $lblKey = New-Object System.Windows.Forms.Label
 $lblKey.Text = "Chemin de la clé SSH :"
@@ -323,43 +345,28 @@ $txtKey.Location = New-Object System.Drawing.Point(180, 90)
 $txtKey.Size = New-Object System.Drawing.Size(400, 25)
 $configGroup.Controls.Add($txtKey)
 
-# Bouton Sauvegarder
-$btnSaveConfig = New-Object System.Windows.Forms.Button
-$btnSaveConfig.Text = "Sauvegarder"
-$btnSaveConfig.Location = New-Object System.Drawing.Point(180, 140)
-$btnSaveConfig.Size = New-Object System.Drawing.Size(120, 30)
-$btnSaveConfig.BackColor = "#2a2a3e"
-$btnSaveConfig.ForeColor = "#ffffff"
-$btnSaveConfig.FlatStyle = "Flat"
-$configGroup.Controls.Add($btnSaveConfig)
+# Bouton Sauvegarder Clé SSH
+$btnSaveKey = New-Object System.Windows.Forms.Button
+$btnSaveKey.Text = "Sauvegarder clé"
+$btnSaveKey.Location = New-Object System.Drawing.Point(590, 90)
+$btnSaveKey.Size = New-Object System.Drawing.Size(120, 25)
+$btnSaveKey.BackColor = "#2a2a3e"
+$btnSaveKey.ForeColor = "#ffffff"
+$btnSaveKey.FlatStyle = "Flat"
+$configGroup.Controls.Add($btnSaveKey)
 
-$btnSaveConfig.Add_Click({
-    $newIP = $txtIP.Text
-    $newKey = $txtKey.Text
-
-    # Mettre à jour les variables globales
-    $global:VPS_IP = $newIP
-    $global:sshKey = $newKey
-
-    # Sauvegarder dans dashboard_config.ps1
+$btnSaveKey.Add_Click({
+    $nouvelleCle = $txtKey.Text
     $configFile = Join-Path $PSScriptRoot "dashboard_config.ps1"
-    $lines = Get-Content $configFile
-    $newLines = @()
-    foreach ($line in $lines) {
-        if ($line -match '^\$global:VPS_IP\s*=') {
-            $newLines += "`$global:VPS_IP = `"$newIP`""
-        } elseif ($line -match '^\$global:sshKey\s*=') {
-            $newLines += "`$global:sshKey = `"$newKey`""
-        } else {
-            $newLines += $line
-        }
-    }
-    $newLines | Set-Content -Path $configFile -Encoding UTF8
-
-    $cmdBox.AppendText("[CONFIG] Paramètres sauvegardés dans dashboard_config.ps1`n")
+    $contenu = Get-Content $configFile -Raw
+    $ancienneLigne = "`$global:sshKey = `"$global:sshKey`""
+    $nouvelleLigne = "`$global:sshKey = `"$nouvelleCle`""
+    $nouveauContenu = $contenu.Replace($ancienneLigne, $nouvelleLigne)
+    $nouveauContenu | Set-Content $configFile -Encoding UTF8
+    $global:sshKey = $nouvelleCle
+    $cmdBox.AppendText("[CONFIG] Clé SSH sauvegardée : $nouvelleCle`n")
 })
 
-$configGroup.Controls.Add($btnSaveConfig)
 
 # ==============================================
 # GRILLE DES 6 CARTES
