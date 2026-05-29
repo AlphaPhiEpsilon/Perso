@@ -92,7 +92,7 @@ foreach ($action in @("start","stop","restart","gracefulReload","monit","flush",
     $item.Add_Click({
         $cmdBox.AppendText("[ACTION] meetgay - $action`n")
         Write-DebugLog "Action $action sur meetgay"
-        Start-Job -ScriptBlock { param($ip) ssh root@$ip "pm2 $action meetgay 2>&1" } -ArgumentList $VPS_IP | Out-Null
+        Start-Job -ScriptBlock { param($ip) ssh root@$ip "pm2 $action meetgay 2>&1" } -ArgumentList $global:VPS_IP | Out-Null
     })
     $menuMeetgay.Items.Add($item)
 }
@@ -115,7 +115,7 @@ foreach ($action in @("start","stop","restart")) {
     $item.Add_Click({
         $cmdBox.AppendText("[ACTION] sshd - $action`n")
         Write-DebugLog "Action $action sur sshd"
-        Start-Job -ScriptBlock { param($ip) ssh root@$ip "systemctl $action sshd 2>&1" } -ArgumentList $VPS_IP | Out-Null
+        Start-Job -ScriptBlock { param($ip) ssh root@$ip "systemctl $action sshd 2>&1" } -ArgumentList $global:VPS_IP | Out-Null
     })
     $menuSshd.Items.Add($item)
 }
@@ -138,7 +138,7 @@ foreach ($action in @("start","stop","restart","reload")) {
     $item.Add_Click({
         $cmdBox.AppendText("[ACTION] nginx - $action`n")
         Write-DebugLog "Action $action sur nginx"
-        Start-Job -ScriptBlock { param($ip) ssh root@$ip "systemctl $action nginx 2>&1" } -ArgumentList $VPS_IP | Out-Null
+        Start-Job -ScriptBlock { param($ip) ssh root@$ip "systemctl $action nginx 2>&1" } -ArgumentList $global:VPS_IP | Out-Null
     })
     $menuNginx.Items.Add($item)
 }
@@ -161,7 +161,7 @@ foreach ($action in @("start","stop","restart")) {
     $item.Add_Click({
         $cmdBox.AppendText("[ACTION] postgresql - $action`n")
         Write-DebugLog "Action $action sur postgresql"
-        Start-Job -ScriptBlock { param($ip) ssh root@$ip "systemctl $action postgresql 2>&1" } -ArgumentList $VPS_IP | Out-Null
+        Start-Job -ScriptBlock { param($ip) ssh root@$ip "systemctl $action postgresql 2>&1" } -ArgumentList $global:VPS_IP | Out-Null
     })
     $menuPostgresql.Items.Add($item)
 }
@@ -184,7 +184,7 @@ foreach ($action in @("start","stop","restart")) {
     $item.Add_Click({
         $cmdBox.AppendText("[ACTION] php8.3-fpm - $action`n")
         Write-DebugLog "Action $action sur php8.3-fpm"
-        Start-Job -ScriptBlock { param($ip) ssh root@$ip "systemctl $action php8.3-fpm 2>&1" } -ArgumentList $VPS_IP | Out-Null
+        Start-Job -ScriptBlock { param($ip) ssh root@$ip "systemctl $action php8.3-fpm 2>&1" } -ArgumentList $global:VPS_IP | Out-Null
     })
     $menuPhp.Items.Add($item)
 }
@@ -207,7 +207,7 @@ foreach ($action in @("start","stop","restart","reload","status")) {
     $item.Add_Click({
         $cmdBox.AppendText("[ACTION] fail2ban - $action`n")
         Write-DebugLog "Action $action sur fail2ban"
-        Start-Job -ScriptBlock { param($ip) ssh root@$ip "systemctl $action fail2ban 2>&1" } -ArgumentList $VPS_IP | Out-Null
+        Start-Job -ScriptBlock { param($ip) ssh root@$ip "systemctl $action fail2ban 2>&1" } -ArgumentList $global:VPS_IP | Out-Null
     })
     $menuFail2ban.Items.Add($item)
 }
@@ -218,17 +218,17 @@ $btnActionses[5].Add_Click({ $menuFail2ban.Show($btnActionses[5], 0, $btnActions
 # ==============================================
 $btnMonitoring.Add_Click({
     $cmdBox.AppendText("=== MONITORING COMPLET ===`n")
-    Start-Job -ScriptBlock { param($ip) ssh root@$ip "/root/panel-api.sh full 2>&1" } -ArgumentList $VPS_IP | Out-Null
+    Start-Job -ScriptBlock { param($ip) ssh root@$ip "/root/panel-api.sh full 2>&1" } -ArgumentList $global:VPS_IP | Out-Null
 })
 
 $btnStatus.Add_Click({
     $cmdBox.AppendText("=== STATUS RAPIDE ===`n")
-    Start-Job -ScriptBlock { param($ip) ssh root@$ip "/root/panel-api.sh status 2>&1" } -ArgumentList $VPS_IP | Out-Null
+    Start-Job -ScriptBlock { param($ip) ssh root@$ip "/root/panel-api.sh status 2>&1" } -ArgumentList $global:VPS_IP | Out-Null
 })
 
 $btnLogsSimple.Add_Click({
     $cmdBox.AppendText("=== DERNIERS LOGS ===`n")
-    Start-Job -ScriptBlock { param($ip) ssh root@$ip "/root/panel-api.sh logs 2>&1" } -ArgumentList $VPS_IP | Out-Null
+    Start-Job -ScriptBlock { param($ip) ssh root@$ip "/root/panel-api.sh logs 2>&1" } -ArgumentList $global:VPS_IP | Out-Null
 })
 
 $btnLogsRealtime.Add_Click({
@@ -237,17 +237,17 @@ $btnLogsRealtime.Add_Click({
 
 $btnReboot.Add_Click({
     $cmdBox.AppendText("[REBOOT] Redémarrage dans 1 minute...`n")
-    Start-Job -ScriptBlock { param($ip) ssh root@$ip "/root/panel-api.sh reboot 2>&1" } -ArgumentList $VPS_IP | Out-Null
+    Start-Job -ScriptBlock { param($ip) ssh root@$ip "/root/panel-api.sh reboot 2>&1" } -ArgumentList $global:VPS_IP | Out-Null
 })
 
 $btnForceReboot.Add_Click({
     $cmdBox.AppendText("[FORCE REBOOT] Redémarrage immédiat...`n")
-    Start-Job -ScriptBlock { param($ip) ssh root@$ip "/root/panel-api.sh reboot-force 2>&1" } -ArgumentList $VPS_IP | Out-Null
+    Start-Job -ScriptBlock { param($ip) ssh root@$ip "/root/panel-api.sh reboot-force 2>&1" } -ArgumentList $global:VPS_IP | Out-Null
 })
 
 $btnSecurite.Add_Click({
     $cmdBox.AppendText("=== FAIL2BAN STATUS ===`n")
-    Start-Job -ScriptBlock { param($ip) ssh root@$ip "/root/panel-api.sh security 2>&1" } -ArgumentList $VPS_IP | Out-Null
+    Start-Job -ScriptBlock { param($ip) ssh root@$ip "/root/panel-api.sh security 2>&1" } -ArgumentList $global:VPS_IP | Out-Null
 })
 
 $btnKillSSH.Add_Click({

@@ -124,7 +124,7 @@ function Process-LogLine {
 # DÉMARRAGE / ARRÊT DU STREAM
 # ==============================================
 function Start-GlobalStream {
-    ssh root@$VPS_IP "pkill -f 'stream-logs.sh' 2>/dev/null" | Out-Null
+    ssh root@$global:VPS_IP "pkill -f 'stream-logs.sh' 2>/dev/null" | Out-Null
     if ($script:streamActive -or $script:isClosing) { return }
     
     $logBoxes[0].Clear(); $logBoxes[0].AppendText("===== LOGS MEETGAY =====`n[Connexion...]`n")
@@ -139,7 +139,7 @@ function Start-GlobalStream {
     $script:streamJob = Start-Job -ScriptBlock {
         param($ip)
         ssh -o ConnectTimeout=10 root@$ip "/root/stream-logs.sh" 2>&1
-    } -ArgumentList $VPS_IP
+    } -ArgumentList $global:VPS_IP
     
     $script:streamTimer = New-Object System.Windows.Forms.Timer
     $script:streamTimer.Interval = 300
