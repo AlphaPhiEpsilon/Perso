@@ -77,135 +77,103 @@ $btnClears[5].Add_Click({
 
 # ----- meetgay (pm2) -----
 $menuMeetgay = New-Object System.Windows.Forms.ContextMenuStrip
-$menuMeetgay.BackColor = "#18191a"
-$menuMeetgay.ForeColor = "White"
-$menuMeetgay.ShowImageMargin = $false
-$menuMeetgay.Padding = 0
 foreach ($action in @("start","stop","restart","gracefulReload","monit","flush","save")) {
     $item = New-Object System.Windows.Forms.ToolStripMenuItem
     $item.Text = $action
-    $item.BackColor = "#18191a"
-    $item.ForeColor = "White"
-    $item.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
-    $item.Padding = 0
-    $item.Margin = 0
     $item.Add_Click({
         $cmdBox.AppendText("[ACTION] meetgay - $action`n")
         Write-DebugLog "Action $action sur meetgay"
-Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "pm2 $action meetgay 2>&1" } -ArgumentList $global:VPS_IP, $global:sshKey | Out-Null    })
+        Start-Job -ScriptBlock { param($ip) ssh root@$ip "pm2 $action meetgay 2>&1" } -ArgumentList $VPS_IP | Out-Null
+    })
     $menuMeetgay.Items.Add($item)
 }
 $btnActionses[0].Add_Click({ $menuMeetgay.Show($btnActionses[0], 0, $btnActionses[0].Height) })
 
 # ----- sshd (systemd) -----
 $menuSshd = New-Object System.Windows.Forms.ContextMenuStrip
-$menuSshd.BackColor = "#18191a"
-$menuSshd.ForeColor = "White"
-$menuSshd.ShowImageMargin = $false
-$menuSshd.Padding = 0
 foreach ($action in @("start","stop","restart")) {
     $item = New-Object System.Windows.Forms.ToolStripMenuItem
     $item.Text = $action
-    $item.BackColor = "#18191a"
-    $item.ForeColor = "White"
-    $item.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
-    $item.Padding = 0
-    $item.Margin = 0
     $item.Add_Click({
         $cmdBox.AppendText("[ACTION] sshd - $action`n")
         Write-DebugLog "Action $action sur sshd"
-Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "systemctl $action sshd 2>&1" } -ArgumentList $global:VPS_IP, $global:sshKey | Out-Null    })
+        Start-Job -ScriptBlock { param($ip) ssh root@$ip "systemctl $action sshd 2>&1" } -ArgumentList $VPS_IP | Out-Null
+    })
     $menuSshd.Items.Add($item)
 }
 $btnActionses[1].Add_Click({ $menuSshd.Show($btnActionses[1], 0, $btnActionses[1].Height) })
 
 # ----- nginx (systemd) -----
 $menuNginx = New-Object System.Windows.Forms.ContextMenuStrip
-$menuNginx.BackColor = "#18191a"
-$menuNginx.ForeColor = "White"
-$menuNginx.ShowImageMargin = $false
-$menuNginx.Padding = 0
 foreach ($action in @("start","stop","restart","reload")) {
     $item = New-Object System.Windows.Forms.ToolStripMenuItem
     $item.Text = $action
-    $item.BackColor = "#18191a"
-    $item.ForeColor = "White"
-    $item.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
-    $item.Padding = 0
-    $item.Margin = 0
     $item.Add_Click({
         $cmdBox.AppendText("[ACTION] nginx - $action`n")
         Write-DebugLog "Action $action sur nginx"
-Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "systemctl $action nginx 2>&1" } -ArgumentList $global:VPS_IP, $global:sshKey | Out-Null    })
+        Start-Job -ScriptBlock { param($ip) ssh root@$ip "systemctl $action nginx 2>&1" } -ArgumentList $VPS_IP | Out-Null
+    })
     $menuNginx.Items.Add($item)
 }
 $btnActionses[2].Add_Click({ $menuNginx.Show($btnActionses[2], 0, $btnActionses[2].Height) })
 
 # ----- postgresql (systemd) -----
 $menuPostgresql = New-Object System.Windows.Forms.ContextMenuStrip
-$menuPostgresql.BackColor = "#18191a"
-$menuPostgresql.ForeColor = "White"
-$menuPostgresql.ShowImageMargin = $false
-$menuPostgresql.Padding = 0
 foreach ($action in @("start","stop","restart")) {
     $item = New-Object System.Windows.Forms.ToolStripMenuItem
     $item.Text = $action
-    $item.BackColor = "#18191a"
-    $item.ForeColor = "White"
-    $item.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
-    $item.Padding = 0
-    $item.Margin = 0
     $item.Add_Click({
         $cmdBox.AppendText("[ACTION] postgresql - $action`n")
         Write-DebugLog "Action $action sur postgresql"
-Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "systemctl $action postgresql 2>&1" } -ArgumentList $global:VPS_IP, $global:sshKey | Out-Null    })
+        Start-Job -ScriptBlock { param($ip) ssh root@$ip "systemctl $action postgresql 2>&1" } -ArgumentList $VPS_IP | Out-Null
+    })
     $menuPostgresql.Items.Add($item)
 }
 $btnActionses[3].Add_Click({ $menuPostgresql.Show($btnActionses[3], 0, $btnActionses[3].Height) })
 
 # ----- php8.3-fpm (systemd) -----
 $menuPhp = New-Object System.Windows.Forms.ContextMenuStrip
-$menuPhp.BackColor = "#18191a"
-$menuPhp.ForeColor = "White"
-$menuPhp.ShowImageMargin = $false
-$menuPhp.Padding = 0
 foreach ($action in @("start","stop","restart")) {
     $item = New-Object System.Windows.Forms.ToolStripMenuItem
     $item.Text = $action
-    $item.BackColor = "#18191a"
-    $item.ForeColor = "White"
-    $item.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
-    $item.Padding = 0
-    $item.Margin = 0
     $item.Add_Click({
         $cmdBox.AppendText("[ACTION] php8.3-fpm - $action`n")
         Write-DebugLog "Action $action sur php8.3-fpm"
-Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "systemctl $action php8.3-fpm 2>&1" } -ArgumentList $global:VPS_IP, $global:sshKey | Out-Null    })
+        Start-Job -ScriptBlock { param($ip) ssh root@$ip "systemctl $action php8.3-fpm 2>&1" } -ArgumentList $VPS_IP | Out-Null
+    })
     $menuPhp.Items.Add($item)
 }
 $btnActionses[4].Add_Click({ $menuPhp.Show($btnActionses[4], 0, $btnActionses[4].Height) })
 
 # ----- fail2ban (systemd) -----
 $menuFail2ban = New-Object System.Windows.Forms.ContextMenuStrip
-$menuFail2ban.BackColor = "#18191a"
-$menuFail2ban.ForeColor = "White"
-$menuFail2ban.ShowImageMargin = $false
-$menuFail2ban.Padding = 0
 foreach ($action in @("start","stop","restart","reload","status")) {
     $item = New-Object System.Windows.Forms.ToolStripMenuItem
     $item.Text = $action
-    $item.BackColor = "#18191a"
-    $item.ForeColor = "White"
-    $item.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
-    $item.Padding = 0
-    $item.Margin = 0
     $item.Add_Click({
         $cmdBox.AppendText("[ACTION] fail2ban - $action`n")
         Write-DebugLog "Action $action sur fail2ban"
-Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "systemctl $action fail2ban 2>&1" } -ArgumentList $global:VPS_IP, $global:sshKey | Out-Null    })
+        Start-Job -ScriptBlock { param($ip) ssh root@$ip "systemctl $action fail2ban 2>&1" } -ArgumentList $VPS_IP | Out-Null
+    })
     $menuFail2ban.Items.Add($item)
 }
 $btnActionses[5].Add_Click({ $menuFail2ban.Show($btnActionses[5], 0, $btnActionses[5].Height) })
+
+# ==============================================
+# LIER LES BOUTONS ZOOM
+# ==============================================
+for ($i = 0; $i -lt 6; $i++) {
+    $btnZoom = $cards[$i].Tag.BtnZoom
+    $btnClose = $cards[$i].Tag.BtnClose
+    $btnZoom.Add_Click({
+        $idx = $this.Tag
+        Toggle-Zoom $cards[$idx]
+    })
+    $btnClose.Add_Click({
+        $idx = $this.Tag
+        Toggle-Zoom $cards[$idx]
+    })
+}
 
 # ==============================================
 # BOUTONS DU PANEL GAUCHE
@@ -220,7 +188,7 @@ Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "/root/panel-ap
 
 $btnLogsSimple.Add_Click({
     $cmdBox.AppendText("=== DERNIERS LOGS ===`n")
-    Start-Job -Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "/root/panel-api.sh logs 2>&1" } -ArgumentList $global:VPS_IP, $global:sshKey | Out-Null { param($ip) ssh root@$ip "/root/panel-api.sh logs 2>&1" } -ArgumentList $global:VPS_IP | Out-Null
+    Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "/root/panel-api.sh logs 2>&1" } -ArgumentList $global:VPS_IP, $global:sshKey | Out-Null { param($ip) ssh root@$ip "/root/panel-api.sh logs 2>&1" } -ArgumentList $global:VPS_IP | Out-Null
 })
 
 $btnLogsRealtime.Add_Click({

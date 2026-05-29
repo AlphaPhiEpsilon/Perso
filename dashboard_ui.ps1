@@ -458,6 +458,7 @@ for ($i = 0; $i -lt 6; $i++) {
     $card.Controls.Add($btnZoom)
     $btnZooms += $btnZoom
     $btnZoom.Tag = $i
+    
 
     # Bouton Clear (x=295)
     $btnClear = New-Object System.Windows.Forms.Button
@@ -506,6 +507,8 @@ $clockTimer = New-Object System.Windows.Forms.Timer
 $clockTimer.Interval = 1000
 $clockTimer.Add_Tick({ $clock.Text = Get-Date -Format "HH:mm:ss" })
 $clockTimer.Start()
+
+
 
 # ==============================================
 # FERMETURE PROPRE

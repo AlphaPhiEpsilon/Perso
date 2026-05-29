@@ -130,11 +130,11 @@ Write-DebugLog "Connexion SSH OK"
 # CHARGEMENT DES MODULES
 # ==============================================
 # Ces fichiers doivent se trouver dans le même dossier que main
-. "$PSScriptRoot\dashboard_ui.ps1"        # Interface utilisateur (fenêtre, cartes, etc.)
-. "$PSScriptRoot\dashboard_stream.ps1"    # Streaming, logs, LEDs
-. "$PSScriptRoot\dashboard_zoom.ps1"      # Fonction Toggle-Zoom et événements
-. "$PSScriptRoot\dashboard_actions.ps1"   # Menus Actions, boutons panel gauche
-. "$PSScriptRoot\dashboard_config.ps1"    # Configuration du Dashboard De Controle V.P.S
+. "$PSScriptRoot\dashboard_ui.ps1"        # 1. Crée les cartes
+. "$PSScriptRoot\dashboard_stream.ps1"    # 2. Streaming
+. "$PSScriptRoot\dashboard_zoom.ps1"      # 3. Zoom (dépend des cartes)
+. "$PSScriptRoot\dashboard_actions.ps1"   # 4. Actions  # Menus Actions, boutons panel gauche
+  # Configuration du Dashboard De Controle V.P.S
 
 # ==============================================
 # LANCEMENT (les variables $script:autoMode et $form sont définies dans les modules)

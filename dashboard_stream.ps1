@@ -137,12 +137,9 @@ function Start-GlobalStream {
     
     $script:streamActive = $true
     $script:streamJob = Start-Job -ScriptBlock {
-        param($ip)
-        $script:streamJob = Start-Job -ScriptBlock {
     param($ip, $key)
     ssh -i "$key" -o ConnectTimeout=10 root@$ip "/root/stream-logs.sh" 2>&1
 } -ArgumentList $global:VPS_IP, $global:sshKey
-    } -ArgumentList $global:VPS_IP
     
     $script:streamTimer = New-Object System.Windows.Forms.Timer
     $script:streamTimer.Interval = 300
