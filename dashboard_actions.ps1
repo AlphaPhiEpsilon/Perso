@@ -83,7 +83,7 @@ foreach ($action in @("start","stop","restart","gracefulReload","monit","flush",
     $item.Add_Click({
         $cmdBox.AppendText("[ACTION] meetgay - $action`n")
         Write-DebugLog "Action $action sur meetgay"
-        Start-Job -ScriptBlock { param($ip) ssh root@$ip "pm2 $action meetgay 2>&1" } -ArgumentList $VPS_IP | Out-Null
+        Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "pm2 $action meetgay 2>&1" } -ArgumentList $global:VPS_IP, $global:sshKey | Out-Null
     })
     $menuMeetgay.Items.Add($item)
 }
@@ -97,7 +97,7 @@ foreach ($action in @("start","stop","restart")) {
     $item.Add_Click({
         $cmdBox.AppendText("[ACTION] sshd - $action`n")
         Write-DebugLog "Action $action sur sshd"
-        Start-Job -ScriptBlock { param($ip) ssh root@$ip "systemctl $action sshd 2>&1" } -ArgumentList $VPS_IP | Out-Null
+        Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "systemctl $action sshd 2>&1" } -ArgumentList $global:VPS_IP, $global:sshKey | Out-Null
     })
     $menuSshd.Items.Add($item)
 }
@@ -111,7 +111,7 @@ foreach ($action in @("start","stop","restart","reload")) {
     $item.Add_Click({
         $cmdBox.AppendText("[ACTION] nginx - $action`n")
         Write-DebugLog "Action $action sur nginx"
-        Start-Job -ScriptBlock { param($ip) ssh root@$ip "systemctl $action nginx 2>&1" } -ArgumentList $VPS_IP | Out-Null
+        Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "systemctl $action nginx 2>&1" } -ArgumentList $global:VPS_IP, $global:sshKey | Out-Null
     })
     $menuNginx.Items.Add($item)
 }
@@ -125,7 +125,7 @@ foreach ($action in @("start","stop","restart")) {
     $item.Add_Click({
         $cmdBox.AppendText("[ACTION] postgresql - $action`n")
         Write-DebugLog "Action $action sur postgresql"
-        Start-Job -ScriptBlock { param($ip) ssh root@$ip "systemctl $action postgresql 2>&1" } -ArgumentList $VPS_IP | Out-Null
+        Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "systemctl $action postgresql 2>&1" } -ArgumentList $global:VPS_IP, $global:sshKey | Out-Null
     })
     $menuPostgresql.Items.Add($item)
 }
@@ -139,7 +139,7 @@ foreach ($action in @("start","stop","restart")) {
     $item.Add_Click({
         $cmdBox.AppendText("[ACTION] php8.3-fpm - $action`n")
         Write-DebugLog "Action $action sur php8.3-fpm"
-        Start-Job -ScriptBlock { param($ip) ssh root@$ip "systemctl $action php8.3-fpm 2>&1" } -ArgumentList $VPS_IP | Out-Null
+        Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "systemctl $action php8.3-fpm 2>&1" } -ArgumentList $global:VPS_IP, $global:sshKey | Out-Null
     })
     $menuPhp.Items.Add($item)
 }
@@ -153,7 +153,7 @@ foreach ($action in @("start","stop","restart","reload","status")) {
     $item.Add_Click({
         $cmdBox.AppendText("[ACTION] fail2ban - $action`n")
         Write-DebugLog "Action $action sur fail2ban"
-        Start-Job -ScriptBlock { param($ip) ssh root@$ip "systemctl $action fail2ban 2>&1" } -ArgumentList $VPS_IP | Out-Null
+        Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "systemctl $action fail2ban 2>&1" } -ArgumentList $global:VPS_IP, $global:sshKey | Out-Null
     })
     $menuFail2ban.Items.Add($item)
 }
@@ -184,12 +184,12 @@ Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "/root/panel-ap
 
 $btnStatus.Add_Click({
     $cmdBox.AppendText("=== STATUS RAPIDE ===`n")
-Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "/root/panel-api.sh status 2>&1" } -ArgumentList $global:VPS_IP, $global:sshKey | Out-Null})
+    Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "/root/panel-api.sh status 2>&1" } -ArgumentList $global:VPS_IP, $global:sshKey | Out-Null})
 
 $btnLogsSimple.Add_Click({
     $cmdBox.AppendText("=== DERNIERS LOGS ===`n")
-    Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "/root/panel-api.sh logs 2>&1" } -ArgumentList $global:VPS_IP, $global:sshKey | Out-Null { param($ip) ssh root@$ip "/root/panel-api.sh logs 2>&1" } -ArgumentList $global:VPS_IP | Out-Null
-})
+    Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "/root/panel-api.sh logs 2>&1" } -ArgumentList $global:VPS_IP, $global:sshKey | Out-Null})
+
 
 $btnLogsRealtime.Add_Click({
     $cmdBox.AppendText("[LOGS] Streaming automatique actif`n")
@@ -197,14 +197,14 @@ $btnLogsRealtime.Add_Click({
 
 $btnReboot.Add_Click({
     $cmdBox.AppendText("[REBOOT] Redémarrage dans 1 minute...`n")
-Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "/root/panel-api.sh reboot 2>&1" } -ArgumentList $global:VPS_IP, $global:sshKey | Out-Null})
+     Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "/root/panel-api.sh reboot 2>&1" } -ArgumentList $global:VPS_IP, $global:sshKey | Out-Null})
 
 $btnForceReboot.Add_Click({
     $cmdBox.AppendText("[FORCE REBOOT] Redémarrage immédiat...`n")
-Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "/root/panel-api.sh reboot-force 2>&1" } -ArgumentList $global:VPS_IP, $global:sshKey | Out-Null})
+    Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "/root/panel-api.sh reboot-force 2>&1" } -ArgumentList $global:VPS_IP, $global:sshKey | Out-Null})
 $btnSecurite.Add_Click({
     $cmdBox.AppendText("=== FAIL2BAN STATUS ===`n")
-Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "/root/panel-api.sh security 2>&1" } -ArgumentList $global:VPS_IP, $global:sshKey | Out-Null})
+    Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "/root/panel-api.sh security 2>&1" } -ArgumentList $global:VPS_IP, $global:sshKey | Out-Null})
 
 $btnKillSSH.Add_Click({
     Kill-AllSSH

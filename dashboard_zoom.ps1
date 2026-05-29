@@ -13,8 +13,6 @@ $global:originalLogFont = $null
 function Toggle-Zoom {
     param($currentCard)
     
-    Write-Host "Toggle-Zoom appelé pour carte : $($currentCard.Text)" -ForegroundColor Yellow
-    
     $data = $currentCard.Tag
     $logBox = $data.LogBox
     $btnRefresh = $data.BtnRefresh
@@ -22,11 +20,7 @@ function Toggle-Zoom {
     $btnClear = $data.BtnClear
     $btnClose = $data.BtnClose
     
-    Write-Host "zoomActive = $($global:zoomActive)" -ForegroundColor Cyan
-    
     if ($global:zoomActive -and $global:zoomedCard -eq $currentCard) {
-        Write-Host "DÉZOOM" -ForegroundColor Green
-        
         # Restaurer la taille et la position
         $currentCard.Size = $global:originalCardSize
         $currentCard.Location = $global:originalCardLocation
@@ -50,8 +44,6 @@ function Toggle-Zoom {
         $global:zoomedCard = $null
     }
     elseif (-not $global:zoomActive) {
-        Write-Host "ZOOM" -ForegroundColor Green
-        
         # Sauvegarder l'état original
         $global:originalCardSize = $currentCard.Size
         $global:originalCardLocation = $currentCard.Location
@@ -89,29 +81,21 @@ function Toggle-Zoom {
     }
 }
 
-# ⚠️ FONCTION CRUCIALE : Attache les événements aux boutons
+# Fonction CRUCIALE : Attache les événements aux boutons
+#ATTENTION AVIS A CHAQUE IA QUI TRAVAILLE SUR CE CODE IL EST
+#INTERDIT DE TOUCHER OU DEPLACER CE CODE SOU PEINE DE REPRESSION
 function Initialize-ZoomEvents {
-    Write-Host "Initialisation des événements de zoom..." -ForegroundColor Magenta
-    
     if (-not $script:btnZooms) {
-        Write-Host "ERREUR: script:btnZooms n'existe pas!" -ForegroundColor Red
         return
     }
-    
-    Write-Host "Nombre de boutons zoom trouvés : $($script:btnZooms.Count)" -ForegroundColor Cyan
     
     for ($i = 0; $i -lt $script:btnZooms.Count; $i++) {
         $index = $i
         $btn = $script:btnZooms[$index]
         
-        Write-Host "Attachement événement pour zoom bouton $index" -ForegroundColor Gray
-        
         $btn.Add_Click({
-            Write-Host "CLIC ZOOM sur carte $index" -ForegroundColor Yellow
             if ($script:cards -and $script:cards[$index]) {
                 Toggle-Zoom $script:cards[$index]
-            } else {
-                Write-Host "ERREUR: Carte $index introuvable" -ForegroundColor Red
             }
         })
     }
@@ -123,7 +107,6 @@ function Initialize-ZoomEvents {
             $btn = $script:btnCloses[$index]
             
             $btn.Add_Click({
-                Write-Host "CLIC FERMETURE sur carte $index" -ForegroundColor Yellow
                 if ($global:zoomActive -and $global:zoomedCard -eq $script:cards[$index]) {
                     Toggle-Zoom $script:cards[$index]
                 }
