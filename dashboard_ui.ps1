@@ -11,7 +11,7 @@ $form.StartPosition = "CenterScreen"
 $form.BackColor = "#1e1e2e"
 
 # ==============================================
-# PANEL GAUCHE
+# PANEL GAUCHE (réorganisé)
 # ==============================================
 $panelLeft = New-Object System.Windows.Forms.Panel
 $panelLeft.Size = New-Object System.Drawing.Size(280, 850)
@@ -21,168 +21,180 @@ $form.Controls.Add($panelLeft)
 
 $yPos = 10
 
-# --- MONITORING ---
-$lblMonitoring = New-Object System.Windows.Forms.Label
-$lblMonitoring.Text = "📊 MONITORING"
-$lblMonitoring.Size = New-Object System.Drawing.Size(260, 30)
-$lblMonitoring.Location = New-Object System.Drawing.Point(10, $yPos)
-$lblMonitoring.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
-$lblMonitoring.ForeColor = "#88c0d0"
-$panelLeft.Controls.Add($lblMonitoring)
-$yPos += 35
-
-$btnMonitoring = New-Object System.Windows.Forms.Button
-$btnMonitoring.Text = "Monitoring complet"
-$btnMonitoring.Size = New-Object System.Drawing.Size(260, 35)
-$btnMonitoring.Location = New-Object System.Drawing.Point(10, $yPos)
-$btnMonitoring.BackColor = "#000000"
-$btnMonitoring.ForeColor = "#ffffff"
-$btnMonitoring.FlatStyle = "Flat"
-$btnMonitoring.TextAlign = "MiddleLeft"
-$panelLeft.Controls.Add($btnMonitoring)
-$yPos += 42
-
-$btnStatus = New-Object System.Windows.Forms.Button
-$btnStatus.Text = "Status rapide"
-$btnStatus.Size = New-Object System.Drawing.Size(260, 35)
-$btnStatus.Location = New-Object System.Drawing.Point(10, $yPos)
-$btnStatus.BackColor = "#000000"
-$btnStatus.ForeColor = "#ffffff"
-$btnStatus.FlatStyle = "Flat"
-$btnStatus.TextAlign = "MiddleLeft"
-$panelLeft.Controls.Add($btnStatus)
-$yPos += 52
-
-# --- LOGS ---
-$lblLogs = New-Object System.Windows.Forms.Label
-$lblLogs.Text = "📜 LOGS"
-$lblLogs.Size = New-Object System.Drawing.Size(260, 30)
-$lblLogs.Location = New-Object System.Drawing.Point(10, $yPos)
-$lblLogs.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
-$lblLogs.ForeColor = "#88c0d0"
-$panelLeft.Controls.Add($lblLogs)
-$yPos += 35
-
-$btnLogsSimple = New-Object System.Windows.Forms.Button
-$btnLogsSimple.Text = "Logs (simple)"
-$btnLogsSimple.Size = New-Object System.Drawing.Size(260, 35)
-$btnLogsSimple.Location = New-Object System.Drawing.Point(10, $yPos)
-$btnLogsSimple.BackColor = "#000000"
-$btnLogsSimple.ForeColor = "#ffffff"
-$btnLogsSimple.FlatStyle = "Flat"
-$btnLogsSimple.TextAlign = "MiddleLeft"
-$panelLeft.Controls.Add($btnLogsSimple)
-$yPos += 42
-
-$btnLogsRealtime = New-Object System.Windows.Forms.Button
-$btnLogsRealtime.Text = "📡 Logs (temps réel)"
-$btnLogsRealtime.Size = New-Object System.Drawing.Size(260, 35)
-$btnLogsRealtime.Location = New-Object System.Drawing.Point(10, $yPos)
-$btnLogsRealtime.BackColor = "#1a3a1a"
-$btnLogsRealtime.ForeColor = "#ffffff"
-$btnLogsRealtime.FlatStyle = "Flat"
-$btnLogsRealtime.TextAlign = "MiddleLeft"
-$panelLeft.Controls.Add($btnLogsRealtime)
-$yPos += 52
-
-# --- CONTROLE VPS ---
-$lblControl = New-Object System.Windows.Forms.Label
-$lblControl.Text = "🔧 CONTROLE VPS"
-$lblControl.Size = New-Object System.Drawing.Size(260, 30)
-$lblControl.Location = New-Object System.Drawing.Point(10, $yPos)
-$lblControl.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
-$lblControl.ForeColor = "#88c0d0"
-$panelLeft.Controls.Add($lblControl)
-$yPos += 35
-
-$btnReboot = New-Object System.Windows.Forms.Button
-$btnReboot.Text = "🔄 Reboot VPS (doux)"
-$btnReboot.Size = New-Object System.Drawing.Size(260, 35)
-$btnReboot.Location = New-Object System.Drawing.Point(10, $yPos)
-$btnReboot.BackColor = "#3a2a1a"
-$btnReboot.ForeColor = "#ffffff"
-$btnReboot.FlatStyle = "Flat"
-$btnReboot.TextAlign = "MiddleLeft"
-$panelLeft.Controls.Add($btnReboot)
-$yPos += 42
-
-$btnForceReboot = New-Object System.Windows.Forms.Button
-$btnForceReboot.Text = "⚠️ Force reboot"
-$btnForceReboot.Size = New-Object System.Drawing.Size(260, 35)
-$btnForceReboot.Location = New-Object System.Drawing.Point(10, $yPos)
-$btnForceReboot.BackColor = "#3a1a1a"
-$btnForceReboot.ForeColor = "#ffffff"
-$btnForceReboot.FlatStyle = "Flat"
-$btnForceReboot.TextAlign = "MiddleLeft"
-$panelLeft.Controls.Add($btnForceReboot)
-$yPos += 52
-
-# --- SECURITE ---
-$lblSecurite = New-Object System.Windows.Forms.Label
-$lblSecurite.Text = "🔒 SECURITE"
-$lblSecurite.Size = New-Object System.Drawing.Size(260, 30)
-$lblSecurite.Location = New-Object System.Drawing.Point(10, $yPos)
-$lblSecurite.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
-$lblSecurite.ForeColor = "#88c0d0"
-$panelLeft.Controls.Add($lblSecurite)
-$yPos += 35
-
-$btnSecurite = New-Object System.Windows.Forms.Button
-$btnSecurite.Text = "Securite (Fail2ban)"
-$btnSecurite.Size = New-Object System.Drawing.Size(260, 35)
-$btnSecurite.Location = New-Object System.Drawing.Point(10, $yPos)
-$btnSecurite.BackColor = "#000000"
-$btnSecurite.ForeColor = "#ffffff"
-$btnSecurite.FlatStyle = "Flat"
-$btnSecurite.TextAlign = "MiddleLeft"
-$panelLeft.Controls.Add($btnSecurite)
-$yPos += 42
-
-# --- BOUTON KILL SSH ---
+# --- 1. KILL SSH (urgence) ---
+$groupKill = New-Object System.Windows.Forms.GroupBox
+$groupKill.Text = "⚠️ URGENCE"
+$groupKill.Size = New-Object System.Drawing.Size(260, 70)
+$groupKill.Location = New-Object System.Drawing.Point(10, $yPos)
+$groupKill.ForeColor = "#ff8888"
+$groupKill.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
+$groupKill.BackColor = "#1e1e2e"
+$panelLeft.Controls.Add($groupKill)
 $btnKillSSH = New-Object System.Windows.Forms.Button
 $btnKillSSH.Text = "⚠️ KILL SSH (urgence)"
-$btnKillSSH.Size = New-Object System.Drawing.Size(260, 35)
-$btnKillSSH.Location = New-Object System.Drawing.Point(10, $yPos)
+$btnKillSSH.Size = New-Object System.Drawing.Size(240, 35)
+$btnKillSSH.Location = New-Object System.Drawing.Point(10, 20)
 $btnKillSSH.BackColor = "#5a1a1a"
 $btnKillSSH.ForeColor = "#ff8888"
 $btnKillSSH.FlatStyle = "Flat"
 $btnKillSSH.TextAlign = "MiddleLeft"
-$panelLeft.Controls.Add($btnKillSSH)
-$yPos += 52
+$groupKill.Controls.Add($btnKillSSH)
+$yPos += 80
 
-# --- COMPTEUR PROCESSUS ---
+# --- 2. CONTROLE VPS ---
+$groupControl = New-Object System.Windows.Forms.GroupBox
+$groupControl.Text = "🔧 CONTROLE VPS"
+$groupControl.Size = New-Object System.Drawing.Size(260, 110)
+$groupControl.Location = New-Object System.Drawing.Point(10, $yPos)
+$groupControl.ForeColor = "#88c0d0"
+$groupControl.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
+$groupControl.BackColor = "#1e1e2e"
+$panelLeft.Controls.Add($groupControl)
+$btnReboot = New-Object System.Windows.Forms.Button
+$btnReboot.Text = "🔄 Reboot VPS (doux)"
+$btnReboot.Size = New-Object System.Drawing.Size(240, 35)
+$btnReboot.Location = New-Object System.Drawing.Point(10, 25)
+$btnReboot.BackColor = "#3a2a1a"
+$btnReboot.ForeColor = "#ffffff"
+$btnReboot.FlatStyle = "Flat"
+$btnReboot.TextAlign = "MiddleLeft"
+$groupControl.Controls.Add($btnReboot)
+$btnForceReboot = New-Object System.Windows.Forms.Button
+$btnForceReboot.Text = "⚠️ Force reboot"
+$btnForceReboot.Size = New-Object System.Drawing.Size(240, 35)
+$btnForceReboot.Location = New-Object System.Drawing.Point(10, 65)
+$btnForceReboot.BackColor = "#3a1a1a"
+$btnForceReboot.ForeColor = "#ff8888"
+$btnForceReboot.FlatStyle = "Flat"
+$btnForceReboot.TextAlign = "MiddleLeft"
+$groupControl.Controls.Add($btnForceReboot)
+$yPos += 120
+
+# --- 3. SECURITE ---
+$groupSecurite = New-Object System.Windows.Forms.GroupBox
+$groupSecurite.Text = "🔒 SECURITE"
+$groupSecurite.Size = New-Object System.Drawing.Size(260, 70)
+$groupSecurite.Location = New-Object System.Drawing.Point(10, $yPos)
+$groupSecurite.ForeColor = "#88c0d0"
+$groupSecurite.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
+$groupSecurite.BackColor = "#1e1e2e"
+$panelLeft.Controls.Add($groupSecurite)
+$btnSecurite = New-Object System.Windows.Forms.Button
+$btnSecurite.Text = "Securite (Fail2ban)"
+$btnSecurite.Size = New-Object System.Drawing.Size(240, 35)
+$btnSecurite.Location = New-Object System.Drawing.Point(10, 25)
+$btnSecurite.BackColor = "#000000"
+$btnSecurite.ForeColor = "#ffffff"
+$btnSecurite.FlatStyle = "Flat"
+$btnSecurite.TextAlign = "MiddleLeft"
+$groupSecurite.Controls.Add($btnSecurite)
+$yPos += 80
+
+# --- 4. LOGS ---
+$groupLogs = New-Object System.Windows.Forms.GroupBox
+$groupLogs.Text = "📜 LOGS"
+$groupLogs.Size = New-Object System.Drawing.Size(260, 110)
+$groupLogs.Location = New-Object System.Drawing.Point(10, $yPos)
+$groupLogs.ForeColor = "#88c0d0"
+$groupLogs.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
+$groupLogs.BackColor = "#1e1e2e"
+$panelLeft.Controls.Add($groupLogs)
+$btnLogsSimple = New-Object System.Windows.Forms.Button
+$btnLogsSimple.Text = "Logs (simple)"
+$btnLogsSimple.Size = New-Object System.Drawing.Size(240, 35)
+$btnLogsSimple.Location = New-Object System.Drawing.Point(10, 25)
+$btnLogsSimple.BackColor = "#000000"
+$btnLogsSimple.ForeColor = "#ffffff"
+$btnLogsSimple.FlatStyle = "Flat"
+$btnLogsSimple.TextAlign = "MiddleLeft"
+$groupLogs.Controls.Add($btnLogsSimple)
+$btnLogsRealtime = New-Object System.Windows.Forms.Button
+$btnLogsRealtime.Text = "📡 Logs (temps réel)"
+$btnLogsRealtime.Size = New-Object System.Drawing.Size(240, 35)
+$btnLogsRealtime.Location = New-Object System.Drawing.Point(10, 65)
+$btnLogsRealtime.BackColor = "#1a3a1a"
+$btnLogsRealtime.ForeColor = "#86efac"
+$btnLogsRealtime.FlatStyle = "Flat"
+$btnLogsRealtime.TextAlign = "MiddleLeft"
+$groupLogs.Controls.Add($btnLogsRealtime)
+$yPos += 120
+
+# --- 5. COMPTEUR PROCESSUS ---
+$groupProcess = New-Object System.Windows.Forms.GroupBox
+$groupProcess.Text = "📊 PROCESSUS"
+$groupProcess.Size = New-Object System.Drawing.Size(260, 80)
+$groupProcess.Location = New-Object System.Drawing.Point(10, $yPos)
+$groupProcess.ForeColor = "#88c0d0"
+$groupProcess.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
+$groupProcess.BackColor = "#1e1e2e"
+$panelLeft.Controls.Add($groupProcess)
 $lblProcessCountTitle = New-Object System.Windows.Forms.Label
-$lblProcessCountTitle.Text = "📊 Processus stream-logs :"
-$lblProcessCountTitle.Size = New-Object System.Drawing.Size(260, 20)
-$lblProcessCountTitle.Location = New-Object System.Drawing.Point(10, $yPos)
+$lblProcessCountTitle.Text = "stream-logs.sh :"
+$lblProcessCountTitle.Size = New-Object System.Drawing.Size(240, 20)
+$lblProcessCountTitle.Location = New-Object System.Drawing.Point(10, 22)
 $lblProcessCountTitle.Font = New-Object System.Drawing.Font("Segoe UI", 8)
 $lblProcessCountTitle.ForeColor = "#cccccc"
-$panelLeft.Controls.Add($lblProcessCountTitle)
-$yPos += 22
-
+$groupProcess.Controls.Add($lblProcessCountTitle)
 $lblProcessCount = New-Object System.Windows.Forms.Label
 $lblProcessCount.Text = "---"
-$lblProcessCount.Size = New-Object System.Drawing.Size(260, 25)
-$lblProcessCount.Location = New-Object System.Drawing.Point(10, $yPos)
+$lblProcessCount.Size = New-Object System.Drawing.Size(240, 30)
+$lblProcessCount.Location = New-Object System.Drawing.Point(10, 45)
 $lblProcessCount.Font = New-Object System.Drawing.Font("Segoe UI", 12, [System.Drawing.FontStyle]::Bold)
 $lblProcessCount.ForeColor = "#fbbf24"
-$panelLeft.Controls.Add($lblProcessCount)
-$yPos += 35
+$groupProcess.Controls.Add($lblProcessCount)
+$yPos += 90
 
-# --- BOUTON MODE AUTO/MANUEL ---
+# --- 6. MODE AUTO/MANUEL ---
+$groupMode = New-Object System.Windows.Forms.GroupBox
+$groupMode.Text = "🎮 MODE"
+$groupMode.Size = New-Object System.Drawing.Size(260, 70)
+$groupMode.Location = New-Object System.Drawing.Point(10, $yPos)
+$groupMode.ForeColor = "#88c0d0"
+$groupMode.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
+$groupMode.BackColor = "#1e1e2e"
+$panelLeft.Controls.Add($groupMode)
 $btnAutoMode = New-Object System.Windows.Forms.Button
 $btnAutoMode.Text = "🔄 MODE: AUTO"
-$btnAutoMode.Size = New-Object System.Drawing.Size(260, 35)
-$btnAutoMode.Location = New-Object System.Drawing.Point(10, $yPos)
+$btnAutoMode.Size = New-Object System.Drawing.Size(240, 35)
+$btnAutoMode.Location = New-Object System.Drawing.Point(10, 25)
 $btnAutoMode.BackColor = "#1a3a1a"
 $btnAutoMode.ForeColor = "#86efac"
 $btnAutoMode.FlatStyle = "Flat"
 $btnAutoMode.TextAlign = "MiddleLeft"
-$panelLeft.Controls.Add($btnAutoMode)
-$yPos += 52
+$groupMode.Controls.Add($btnAutoMode)
+$yPos += 80
+
+# --- 7. MONITORING ---
+$groupMonitoring = New-Object System.Windows.Forms.GroupBox
+$groupMonitoring.Text = "📊 MONITORING"
+$groupMonitoring.Size = New-Object System.Drawing.Size(260, 110)
+$groupMonitoring.Location = New-Object System.Drawing.Point(10, $yPos)
+$groupMonitoring.ForeColor = "#88c0d0"
+$groupMonitoring.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
+$groupMonitoring.BackColor = "#1e1e2e"
+$panelLeft.Controls.Add($groupMonitoring)
+$btnMonitoring = New-Object System.Windows.Forms.Button
+$btnMonitoring.Text = "Monitoring complet"
+$btnMonitoring.Size = New-Object System.Drawing.Size(240, 35)
+$btnMonitoring.Location = New-Object System.Drawing.Point(10, 25)
+$btnMonitoring.BackColor = "#000000"
+$btnMonitoring.ForeColor = "#ffffff"
+$btnMonitoring.FlatStyle = "Flat"
+$btnMonitoring.TextAlign = "MiddleLeft"
+$groupMonitoring.Controls.Add($btnMonitoring)
+$btnStatus = New-Object System.Windows.Forms.Button
+$btnStatus.Text = "Status rapide"
+$btnStatus.Size = New-Object System.Drawing.Size(240, 35)
+$btnStatus.Location = New-Object System.Drawing.Point(10, 65)
+$btnStatus.BackColor = "#000000"
+$btnStatus.ForeColor = "#ffffff"
+$btnStatus.FlatStyle = "Flat"
+$btnStatus.TextAlign = "MiddleLeft"
+$groupMonitoring.Controls.Add($btnStatus)
+$yPos += 120
 
 # ==============================================
-# PANEL STATUTS (LED + UPTIME)
+# PANEL STATUTS (LED + UPTIME + CPU/RAM)
 # ==============================================
 $panelStatus = New-Object System.Windows.Forms.Panel
 $panelStatus.Size = New-Object System.Drawing.Size(1080, 100)
@@ -190,11 +202,11 @@ $panelStatus.Location = New-Object System.Drawing.Point(300, 40)
 $panelStatus.BackColor = "#2d2d2d"
 $form.Controls.Add($panelStatus)
 
-$services = @("📦 meetgay", "🔐 sshd", "🌐 nginx", "🐘 postgresql", "🐘 php", "🛡️ fail2ban")
+$services = @("📊 CPU/RAM", "📦 meetgay", "👤 systemd-logind", "🌐 nginx", "🐘 postgresql", "🐘 php", "🛡️ fail2ban")
 $ledLabels = @()
 $uptimeLabels = @()
 
-for ($i=0; $i -lt $services.Length; $i++) {
+for ($i = 0; $i -lt $services.Length; $i++) {
     $x = 10 + ($i * 140)
     $card = New-Object System.Windows.Forms.GroupBox
     $card.Text = $services[$i]
@@ -204,23 +216,51 @@ for ($i=0; $i -lt $services.Length; $i++) {
     $card.BackColor = "#1a1a2e"
     $panelStatus.Controls.Add($card)
     
-    $led = New-Object System.Windows.Forms.Label
-    $led.Text = "● ?"
-    $led.ForeColor = "#888888"
-    $led.Size = New-Object System.Drawing.Size(110, 25)
-    $led.Location = New-Object System.Drawing.Point(10, 18)
-    $led.Font = New-Object System.Drawing.Font("Segoe UI", 8, [System.Drawing.FontStyle]::Bold)
-    $card.Controls.Add($led)
-    $ledLabels += $led
-    
-    $uptime = New-Object System.Windows.Forms.Label
-    $uptime.Text = "---"
-    $uptime.Size = New-Object System.Drawing.Size(110, 20)
-    $uptime.Location = New-Object System.Drawing.Point(10, 48)
-    $uptime.Font = New-Object System.Drawing.Font("Segoe UI", 7)
-    $uptime.ForeColor = "#aaaaaa"
-    $card.Controls.Add($uptime)
-    $uptimeLabels += $uptime
+    if ($i -eq 0) {
+        # Carte CPU/RAM : deux lignes
+        $cpuValue = New-Object System.Windows.Forms.Label
+        $cpuValue.Text = "CPU: --"
+        $cpuValue.Size = New-Object System.Drawing.Size(110, 25)
+        $cpuValue.Location = New-Object System.Drawing.Point(10, 20)
+        $cpuValue.Font = New-Object System.Drawing.Font("Segoe UI", 8, [System.Drawing.FontStyle]::Bold)
+        $cpuValue.ForeColor = "#86efac"
+        $card.Controls.Add($cpuValue)
+        
+        $ramValue = New-Object System.Windows.Forms.Label
+        $ramValue.Text = "RAM: --"
+        $ramValue.Size = New-Object System.Drawing.Size(110, 25)
+        $ramValue.Location = New-Object System.Drawing.Point(10, 50)
+        $ramValue.Font = New-Object System.Drawing.Font("Segoe UI", 8, [System.Drawing.FontStyle]::Bold)
+        $ramValue.ForeColor = "#86efac"
+        $card.Controls.Add($ramValue)
+        
+        # Stocker les références globales
+        $global:cpuLabel = $cpuValue
+        $global:ramLabel = $ramValue
+        
+        # Ajouter des placeholders pour garder les indices cohérents
+        $ledLabels += $null
+        $uptimeLabels += $null
+    } else {
+        # Cartes normales : LED + uptime
+        $led = New-Object System.Windows.Forms.Label
+        $led.Text = "● ?"
+        $led.ForeColor = "#888888"
+        $led.Size = New-Object System.Drawing.Size(110, 25)
+        $led.Location = New-Object System.Drawing.Point(10, 18)
+        $led.Font = New-Object System.Drawing.Font("Segoe UI", 8, [System.Drawing.FontStyle]::Bold)
+        $card.Controls.Add($led)
+        $ledLabels += $led
+        
+        $uptime = New-Object System.Windows.Forms.Label
+        $uptime.Text = "---"
+        $uptime.Size = New-Object System.Drawing.Size(110, 20)
+        $uptime.Location = New-Object System.Drawing.Point(10, 48)
+        $uptime.Font = New-Object System.Drawing.Font("Segoe UI", 7)
+        $uptime.ForeColor = "#aaaaaa"
+        $card.Controls.Add($uptime)
+        $uptimeLabels += $uptime
+    }
 }
 
 # ==============================================
@@ -385,7 +425,7 @@ $btnActionses = @()
 $btnZooms = @()
 $btnCloses = @()
 
-$servicesNames = @("📦 meetgay", "🔐 sshd", "🌐 nginx", "🐘 postgresql", "🐘 php", "🛡️ fail2ban")
+$servicesNames = @("📦 meetgay", "👤 systemd-logind", "🌐 nginx", "🐘 postgresql", "🐘 php", "🛡️ fail2ban")
 
 for ($i = 0; $i -lt 6; $i++) {
     $x = if ($i -lt 3) { $i * 350 } else { ($i - 3) * 350 }

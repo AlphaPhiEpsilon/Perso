@@ -16,15 +16,15 @@ $btnClears[0].Add_Click({
     $logBoxes[0].AppendText("===== LOGS MEETGAY =====`n[CLEAR] Logs effacés`n")
 })
 
-# sshd (index 1)
+# logind (index 1)
 $btnRefreshes[1].Add_Click({
     $logBoxes[1].Clear()
-    $logBoxes[1].AppendText("===== LOGS SSHD =====`n[REFRESH] Logs effacés`n")
+    $logBoxes[1].AppendText("===== LOGS LOGIN =====`n[REFRESH] Logs effacés`n")
     if (-not $script:streamActive) { Start-GlobalStream }
 })
 $btnClears[1].Add_Click({
     $logBoxes[1].Clear()
-    $logBoxes[1].AppendText("===== LOGS SSHD =====`n[CLEAR] Logs effacés`n")
+    $logBoxes[1].AppendText("===== LOGS LOGIN =====`n[CLEAR] Logs effacés`n")
 })
 
 # nginx (index 2)
@@ -177,15 +177,15 @@ $menuMeetgay.Items.Add($statusItem)
 $btnActionses[0].Add_Click({ $menuMeetgay.Show($btnActionses[0], 0, $btnActionses[0].Height) })
 
 
-# ----- sshd (systemd) - carte 1 -----
-$menuSshd = New-Object System.Windows.Forms.ContextMenuStrip
-$menuSshd.BackColor = "#18191a"
-$menuSshd.ForeColor = "White"
-$menuSshd.ShowImageMargin = $false
-$menuSshd.Padding = 0
+# ----- systemd-logind (systemd) - carte 1 -----
+$menuLogind = New-Object System.Windows.Forms.ContextMenuStrip
+$menuLogind.BackColor = "#18191a"
+$menuLogind.ForeColor = "White"
+$menuLogind.ShowImageMargin = $false
+$menuLogind.Padding = 0
 
-$actionsSshd = @("start","stop","restart")
-foreach ($action in $actionsSshd) {
+$actionsLogind = @("start","stop","restart")
+foreach ($action in $actionsLogind) {
     $item = New-Object System.Windows.Forms.ToolStripMenuItem
     $item.Text = $action
     $item.BackColor = "#18191a"
@@ -196,18 +196,17 @@ foreach ($action in $actionsSshd) {
     $item.Tag = $action
     $item.Add_Click({
         $act = $this.Tag
-        $logBoxes[1].AppendText("> systemctl $act sshd`n")
+        $logBoxes[1].AppendText("> systemctl $act systemd-logind`n")
         $logBoxes[1].ScrollToCaret()
-        $result = ssh -i $global:sshKey root@$global:VPS_IP "systemctl $act sshd 2>&1"
-        if ($result) { $logBoxes[1].AppendText($result + "`n") }
-        else { $logBoxes[1].AppendText("(Commande exécutée sans sortie)`n") }
+        ssh -i $global:sshKey root@$global:VPS_IP "systemctl $act systemd-logind" 2>&1 | Out-Null
+        $logBoxes[1].AppendText("(commande envoyée, voir les logs pour le résultat)`n")
         $logBoxes[1].ScrollToCaret()
     })
-    $menuSshd.Items.Add($item)
+    $menuLogind.Items.Add($item)
 }
 
 $separator = New-Object System.Windows.Forms.ToolStripSeparator
-$menuSshd.Items.Add($separator)
+$menuLogind.Items.Add($separator)
 
 $statusItem = New-Object System.Windows.Forms.ToolStripMenuItem
 $statusItem.Text = "status"
@@ -217,20 +216,34 @@ $statusItem.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing
 $statusItem.Padding = 0
 $statusItem.Margin = 0
 $statusItem.Add_Click({
-    $logBoxes[1].AppendText("> systemctl status sshd`n")
+    $logBoxes[1].AppendText("> systemctl status systemd-logind (résumé)`n")
     $logBoxes[1].ScrollToCaret()
-    $result = ssh -i $global:sshKey root@$global:VPS_IP "systemctl status sshd --no-pager 2>&1 | head -n 10"
+    $result = ssh -i $global:sshKey root@$global:VPS_IP "systemctl show systemd-logind --property=Names,LoadState,ActiveState,SubState,MainPID,MemoryCurrent 2>&1"
     if ($result) {
         $clean = $result -replace '[^\x00-\x7F]', ''
-        $logBoxes[1].AppendText($clean + "`n")
+        $data = @{}
+        $clean -split "`n" | ForEach-Object {
+            if ($_ -match '^([^=]+)=(.*)$') { $data[$matches[1]] = $matches[2] }
+        }
+        $name = $data['Names'] -replace '\.service',''
+        $load = $data['LoadState']
+        $active = $data['ActiveState']
+        $sub = $data['SubState']
+        $mainPid = if ($data['MainPID'] -eq 0) { "aucun" } else { $data['MainPID'] }
+        $mem = if ($data['MemoryCurrent'] -gt 0) { "$([math]::Round($data['MemoryCurrent']/1MB,1)) MB" } else { "n/a" }
+        $logBoxes[1].AppendText("Service : $name`n")
+        $logBoxes[1].AppendText("Loaded  : $load`n")
+        $logBoxes[1].AppendText("Active  : $active ($sub)`n")
+        $logBoxes[1].AppendText("Main PID: $mainPid`n")
+        $logBoxes[1].AppendText("Memory  : $mem`n")
     } else {
         $logBoxes[1].AppendText("Impossible de récupérer le statut`n")
     }
     $logBoxes[1].ScrollToCaret()
 })
-$menuSshd.Items.Add($statusItem)
+$menuLogind.Items.Add($statusItem)
 
-$btnActionses[1].Add_Click({ $menuSshd.Show($btnActionses[1], 0, $btnActionses[1].Height) })
+$btnActionses[1].Add_Click({ $menuLogind.Show($btnActionses[1], 0, $btnActionses[1].Height) })
 
 # ----- nginx (systemd) - carte 2 (version corrigée) -----
 $menuNginx = New-Object System.Windows.Forms.ContextMenuStrip
@@ -549,15 +562,15 @@ for ($i = 0; $i -lt 6; $i++) {
 # ==============================================
 $btnMonitoring.Add_Click({
     $cmdBox.AppendText("=== MONITORING COMPLET ===`n")
-Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "/root/panel-api.sh full 2>&1" } -ArgumentList $global:VPS_IP, $global:sshKey | Out-Null})
+Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "/root/scripts/panel-api.sh full 2>&1" } -ArgumentList $global:VPS_IP, $global:sshKey | Out-Null})
 
 $btnStatus.Add_Click({
     $cmdBox.AppendText("=== STATUS RAPIDE ===`n")
-    Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "/root/panel-api.sh status 2>&1" } -ArgumentList $global:VPS_IP, $global:sshKey | Out-Null})
+    Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "/root/scripts/panel-api.sh status 2>&1" } -ArgumentList $global:VPS_IP, $global:sshKey | Out-Null})
 
 $btnLogsSimple.Add_Click({
     $cmdBox.AppendText("=== DERNIERS LOGS ===`n")
-    Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "/root/panel-api.sh logs 2>&1" } -ArgumentList $global:VPS_IP, $global:sshKey | Out-Null})
+    Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "/root/scripts/panel-api.sh logs 2>&1" } -ArgumentList $global:VPS_IP, $global:sshKey | Out-Null})
 
 
 $btnLogsRealtime.Add_Click({
@@ -566,14 +579,25 @@ $btnLogsRealtime.Add_Click({
 
 $btnReboot.Add_Click({
     $cmdBox.AppendText("[REBOOT] Redémarrage dans 1 minute...`n")
-     Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "/root/panel-api.sh reboot 2>&1" } -ArgumentList $global:VPS_IP, $global:sshKey | Out-Null})
+     Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "/root/scripts/panel-api.sh reboot 2>&1" } -ArgumentList $global:VPS_IP, $global:sshKey | Out-Null})
 
 $btnForceReboot.Add_Click({
-    $cmdBox.AppendText("[FORCE REBOOT] Redémarrage immédiat...`n")
-    Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "/root/panel-api.sh reboot-force 2>&1" } -ArgumentList $global:VPS_IP, $global:sshKey | Out-Null})
+    $result = [System.Windows.Forms.MessageBox]::Show(
+        "⚠️ ATTENTION : Le redémarrage forcé (reboot -f) arrête immédiatement le système sans fermer proprement les services.`n`nCela peut entraîner une perte de données ou une corruption des fichiers.`n`nÊtes-vous sûr de vouloir continuer ?",
+        "Confirmation - Force reboot",
+        "YesNo",
+        "Warning"
+    )
+    if ($result -eq "Yes") {
+        $cmdBox.AppendText("[FORCE REBOOT] Redémarrage immédiat...`n")
+        Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "/root/scripts/panel-api.sh reboot-force 2>&1" } -ArgumentList $global:VPS_IP, $global:sshKey | Out-Null
+    } else {
+        $cmdBox.AppendText("[FORCE REBOOT] Annulé par l'utilisateur.`n")
+    }
+})
 $btnSecurite.Add_Click({
     $cmdBox.AppendText("=== FAIL2BAN STATUS ===`n")
-    Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "/root/panel-api.sh security 2>&1" } -ArgumentList $global:VPS_IP, $global:sshKey | Out-Null})
+    Start-Job -ScriptBlock { param($ip, $key) ssh -i "$key" root@$ip "/root/scripts/panel-api.sh security 2>&1" } -ArgumentList $global:VPS_IP, $global:sshKey | Out-Null})
 
 $btnKillSSH.Add_Click({
     Kill-AllSSH

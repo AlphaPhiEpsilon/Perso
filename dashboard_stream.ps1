@@ -59,14 +59,14 @@ function Process-LogLine {
     
     # Distribution vers les cartes selon le préfixe
     if ($text -match "^\[MEETGAY\]") { Add-ColoredLine $logBoxes[0] $text }
-    elseif ($text -match "^\[SSHD\]") { Add-ColoredLine $logBoxes[1] $text }
+    elseif ($text -match "^\[LOGIND\]") { Add-ColoredLine $logBoxes[1] $text }
     elseif ($text -match "^\[NGINX") { Add-ColoredLine $logBoxes[2] $text }
     elseif ($text -match "^\[POSTGRESQL\]") { Add-ColoredLine $logBoxes[3] $text }
     elseif ($text -match "^\[PHP\]") { Add-ColoredLine $logBoxes[4] $text }
     elseif ($text -match "^\[FAIL2BAN\]") { Add-ColoredLine $logBoxes[5] $text }
     elseif ($text -match "^\[STATUS\]") {
         # Extraction des statuts pour les LEDs
-        $meetgay = ""; $meetgay_uptime = ""; $nginx = ""; $pg = ""; $php = ""; $sshd = ""; $fail2ban = ""
+        $meetgay = ""; $meetgay_uptime = ""; $nginx = ""; $pg = ""; $php = ""; $logind = ""; $fail2ban = ""
         
         if ($text -match "meetgay:(\S+)") { $meetgay = $matches[1] }
         if ($text -match "uptime:([^\s]+)") { 
@@ -75,47 +75,56 @@ function Process-LogLine {
         if ($text -match "nginx:(\S+)") { $nginx = $matches[1] }
         if ($text -match "postgresql:(\S+)") { $pg = $matches[1] }
         if ($text -match "php:(\S+)") { $php = $matches[1] }
-        if ($text -match "sshd:(\S+)") { $sshd = $matches[1] }
+        if ($text -match "logind:(\S+)") { $logind = $matches[1] }
         if ($text -match "fail2ban:(\S+)") { $fail2ban = $matches[1] }
         
         $form.Invoke([Action]{
+            # meetgay (index 1)
             if ($meetgay -ne "") {
-                $ledLabels[0].Text = if ($meetgay -eq "online") { "● EN LIGNE" } else { "○ HORS LIGNE" }
-                $ledLabels[0].ForeColor = if ($meetgay -eq "online") { "#2ecc71" } else { "#e74c3c" }
-                if ($meetgay_uptime -ne "") { $uptimeLabels[0].Text = $meetgay_uptime }
+                $ledLabels[1].Text = if ($meetgay -eq "online") { "● EN LIGNE" } else { "○ HORS LIGNE" }
+                $ledLabels[1].ForeColor = if ($meetgay -eq "online") { "#2ecc71" } else { "#e74c3c" }
+                if ($meetgay_uptime -ne "") { $uptimeLabels[1].Text = $meetgay_uptime }
             }
+            # logind (index 2)
+            if ($logind -ne "") {
+                $ledLabels[2].Text = if ($logind -eq "active") { "● EN LIGNE" } else { "○ HORS LIGNE" }
+                $ledLabels[2].ForeColor = if ($logind -eq "active") { "#2ecc71" } else { "#e74c3c" }
+                $uptimeLabels[2].Text = $logind
+            }
+            # nginx (index 3)
             if ($nginx -ne "") {
-                $ledLabels[2].Text = if ($nginx -eq "active") { "● EN LIGNE" } else { "○ HORS LIGNE" }
-                $ledLabels[2].ForeColor = if ($nginx -eq "active") { "#2ecc71" } else { "#e74c3c" }
-                $uptimeLabels[2].Text = $nginx
+                $ledLabels[3].Text = if ($nginx -eq "active") { "● EN LIGNE" } else { "○ HORS LIGNE" }
+                $ledLabels[3].ForeColor = if ($nginx -eq "active") { "#2ecc71" } else { "#e74c3c" }
+                $uptimeLabels[3].Text = $nginx
             }
+            # postgresql (index 4)
             if ($pg -ne "") {
-                $ledLabels[3].Text = if ($pg -eq "active") { "● EN LIGNE" } else { "○ HORS LIGNE" }
-                $ledLabels[3].ForeColor = if ($pg -eq "active") { "#2ecc71" } else { "#e74c3c" }
-                $uptimeLabels[3].Text = $pg
+                $ledLabels[4].Text = if ($pg -eq "active") { "● EN LIGNE" } else { "○ HORS LIGNE" }
+                $ledLabels[4].ForeColor = if ($pg -eq "active") { "#2ecc71" } else { "#e74c3c" }
+                $uptimeLabels[4].Text = $pg
             }
+            # php (index 5)
             if ($php -ne "") {
-                $ledLabels[4].Text = if ($php -eq "active") { "● EN LIGNE" } else { "○ HORS LIGNE" }
-                $ledLabels[4].ForeColor = if ($php -eq "active") { "#2ecc71" } else { "#e74c3c" }
-                $uptimeLabels[4].Text = $php
+                $ledLabels[5].Text = if ($php -eq "active") { "● EN LIGNE" } else { "○ HORS LIGNE" }
+                $ledLabels[5].ForeColor = if ($php -eq "active") { "#2ecc71" } else { "#e74c3c" }
+                $uptimeLabels[5].Text = $php
             }
-            if ($sshd -ne "") {
-                $ledLabels[1].Text = if ($sshd -eq "active") { "● EN LIGNE" } else { "○ HORS LIGNE" }
-                $ledLabels[1].ForeColor = if ($sshd -eq "active") { "#2ecc71" } else { "#e74c3c" }
-                $uptimeLabels[1].Text = $sshd
-            }
+            # fail2ban (index 6)
             if ($fail2ban -ne "") {
-                $ledLabels[5].Text = if ($fail2ban -eq "active") { "● EN LIGNE" } else { "○ HORS LIGNE" }
-                $ledLabels[5].ForeColor = if ($fail2ban -eq "active") { "#2ecc71" } else { "#e74c3c" }
-                $uptimeLabels[5].Text = $fail2ban
+                $ledLabels[6].Text = if ($fail2ban -eq "active") { "● EN LIGNE" } else { "○ HORS LIGNE" }
+                $ledLabels[6].ForeColor = if ($fail2ban -eq "active") { "#2ecc71" } else { "#e74c3c" }
+                $uptimeLabels[6].Text = $fail2ban
             }
         })
     }
-    elseif ($text -match "^\[PROCESS_COUNT\]\s+(\d+)") {
-        $count = $matches[1]
+        elseif ($text -match "^\[STATS\]") {
+        $form.Invoke([Action]{ $cmdBox.AppendText("[DEBUG] cpuLabel = $global:cpuLabel, ramLabel = $global:ramLabel`n") })
+        
+        if ($text -match "cpu:(\d+(?:\.\d+)?)") { $cpu = $matches[1] }
+        if ($text -match "ram:(\d+)/(\d+)") { $ramUsed = $matches[1]; $ramTotal = $matches[2] }
         $form.Invoke([Action]{
-            $lblProcessCount.Text = if ($count -eq "0") { "✅ 0 processus" } else { "⚠️ $count processus" }
-            $lblProcessCount.ForeColor = if ($count -eq "0") { "#2ecc71" } else { "#f87171" }
+            if ($cpu) { $global:cpuLabel.Text = "CPU: $cpu%" }
+            if ($ramUsed -and $ramTotal) { $global:ramLabel.Text = "RAM: $ramUsed/$ramTotal MB" }
         })
     }
 }
@@ -138,7 +147,7 @@ function Start-GlobalStream {
     $script:streamActive = $true
     $script:streamJob = Start-Job -ScriptBlock {
     param($ip, $key)
-    ssh -i "$key" -o ConnectTimeout=10 root@$ip "/root/stream-logs.sh" 2>&1
+    ssh -i "$key" -o ConnectTimeout=10 root@$ip "/root/scripts/stream-logs.sh" 2>&1
 } -ArgumentList $global:VPS_IP, $global:sshKey
     
     $script:streamTimer = New-Object System.Windows.Forms.Timer
