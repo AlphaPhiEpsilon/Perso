@@ -124,7 +124,7 @@ if ($sshTest -ne "OK") {
         exit
     }
 }
-Write-DebugLog "Connexion SSH OK"
+
 
 # ==============================================
 # CHARGEMENT DES MODULES
